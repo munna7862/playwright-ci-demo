@@ -11,8 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shardIndex: [1, 2]
-        shardTotal: [2]
+        shard: [1, 2]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -21,14 +20,16 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - name: Run shard ${{ matrix.shardIndex }} of ${{ matrix.shardTotal }}
-        run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }} --reporter=blob
+      - name: Run shard ${{ matrix.shard }} of 2
+        run: >-
+          npx playwright test --reporter=blob
+          --shard=${{ matrix.shard }}/2
         env:
           TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
       - uses: actions/upload-artifact@v6
         if: ${{ !cancelled() }}
         with:
-          name: blob-report-${{ matrix.shardIndex }}
+          name: blob-report-${{ matrix.shard }}
           path: blob-report
           retention-days: 1
   merge-reports:
