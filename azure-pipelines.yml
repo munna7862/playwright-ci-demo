@@ -1,0 +1,25 @@
+# Same pipeline in Azure DevOps (example for Ep 7, based on the Playwright CI docs).
+trigger:
+  - main
+pool:
+  vmImage: ubuntu-latest
+steps:
+  - task: UseNode@1
+    inputs:
+      version: '22'
+    displayName: 'Install Node.js'
+  - script: npm ci
+    displayName: 'Install dependencies'
+  - script: npx playwright install --with-deps chromium
+    displayName: 'Install Playwright browsers'
+  - script: npx playwright test
+    displayName: 'Run Playwright tests'
+    env:
+      CI: 'true'
+      TEST_PASSWORD: $(TEST_PASSWORD)
+  - task: PublishTestResults@2
+    displayName: 'Publish test results'
+    condition: succeededOrFailed()
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: 'results/junit.xml'

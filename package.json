@@ -1,0 +1,13 @@
+{
+  "name": "playwright-ci-demo",
+  "private": true,
+  "description": "Demo project for the free CI/CD for Testers course by @testlab.with.ai",
+  "scripts": {
+    "start": "node app/server.js",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0",
+    "@types/node": "^22.0.0"
+  }
+}
